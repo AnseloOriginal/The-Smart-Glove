@@ -1,0 +1,9 @@
+# Ignore binaries
+*.exe
+*.dll
+nuklear.dll
+*.bat
+*.lnk
+
+# Ignore VSCode settings
+.vscode/
