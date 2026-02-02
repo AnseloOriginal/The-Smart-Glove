@@ -30,7 +30,7 @@ jobs:
 
       - name: Package ZIP for release
         run: |
-          powershell -Command "Compress-Archive -Path EdoCraft2025.exe,*.dll,readme.txt -DestinationPath EdoCraft2025_Windows.zip"
+          Compress-Archive -Path EdoCraft2025.exe,*.dll -DestinationPath EdoCraft2025_Windows.zip
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v1
