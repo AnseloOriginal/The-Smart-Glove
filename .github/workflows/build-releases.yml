@@ -25,7 +25,7 @@ jobs:
 
       - name: Build Windows standalone
         run: |
-          copy /b love\love-11.5-win64\love.exe+EdoCraft2025.love EdoCraft2025.exe
+          cmd /c "copy /b love\love-11.5-win64\love.exe+EdoCraft2025.love EdoCraft2025.exe"
           copy love\love-11.5-win64\*.dll .
 
       - name: Package ZIP for release
