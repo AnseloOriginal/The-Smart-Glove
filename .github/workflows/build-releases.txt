@@ -1,0 +1,46 @@
+name: Build and Release EdoCraft
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Make .love file
+        run: |
+          powershell -Command "Compress-Archive -Path program\* -DestinationPath EdoCraft2025.love"
+
+      - name: Download LOVE2D for Windows
+        run: |
+          curl -L https://github.com/love2d/love/releases/download/11.5/love-11.5-win64.zip -o love-win64.zip
+          Expand-Archive love-win64.zip love
+
+      - name: Build Windows standalone
+        run: |
+          copy /b love\love-11.5-win64\love.exe+EdoCraft2025.love EdoCraft2025.exe
+          copy love\love-11.5-win64\*.dll .
+
+      - name: Package ZIP for release
+        run: |
+          powershell -Command "Compress-Archive -Path EdoCraft2025.exe,*.dll,readme.txt -DestinationPath EdoCraft2025_Windows.zip"
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.sha }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload the packaged game
+        uses: softprops/action-gh-release@v1
+        with:
+          files: EdoCraft2025_Windows.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
