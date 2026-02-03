@@ -32,6 +32,13 @@ jobs:
         run: |
           Compress-Archive -Path EdoCraft2025.exe,*.dll -DestinationPath EdoCraft2025_Windows.zip
 
+      - name: Create tag for release
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git tag -a v1.0 -m "Release v1.0"
+          git push origin v1.0
+          
       - name: Create GitHub release
         uses: softprops/action-gh-release@v1
         with:
