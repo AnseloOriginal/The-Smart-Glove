@@ -1,7 +1,7 @@
 # Ignore binaries
 *.exe
 *.dll
-nuklear.dll
+program/nuklear.dll
 *.bat
 *.lnk
 
