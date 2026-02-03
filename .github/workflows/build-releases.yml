@@ -32,17 +32,21 @@ jobs:
         run: |
           Compress-Archive -Path EdoCraft2025.exe,*.dll -DestinationPath EdoCraft2025_Windows.zip
 
-      - name: Create tag for release
+      - name: Create dynamic tag
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git tag -a v1.0 -m "Release v1.0"
-          git push origin v1.0
-          
-      - name: Create GitHub release
+          TAG=v${{ github.run_number }}
+          git tag $TAG
+          git push origin $TAG
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub release with files
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ github.run_number }}
+          files: EdoCraft2025_Windows.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
