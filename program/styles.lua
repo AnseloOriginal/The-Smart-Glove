@@ -53,9 +53,9 @@ function styles.on_load(ui)
 	styles.images.Middle = love.graphics.newImage("middle.png")
 	styles.images.Ring = love.graphics.newImage("ring.png")
 	styles.images.Pinky = love.graphics.newImage("pinky.png")
-	styles.images.Circle = love.graphics.newImage("Circle.png")
-	styles.images.Default = love.graphics.newImage("Default.png")
-	styles.images.Add = love.graphics.newImage("Add.png")
+	styles.images.Circle = love.graphics.newImage("circle.png")
+	styles.images.Default = love.graphics.newImage("default.png")
+	styles.images.Add = love.graphics.newImage("add.png")
 end
 
 function styles.draw(Name,ui)

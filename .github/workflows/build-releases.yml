@@ -18,7 +18,7 @@ jobs:
 
       - name: Make .love file
         run: |
-          Compress-Archive -Path program\* -DestinationPath EdoCraft2025.zip
+          Compress-Archive -Path program -DestinationPath EdoCraft2025.zip
           Rename-Item EdoCraft2025.zip EdoCraft2025.love
 
       - name: Download LOVE2D for Windows
