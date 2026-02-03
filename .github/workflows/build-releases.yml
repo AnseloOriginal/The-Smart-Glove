@@ -5,6 +5,10 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+# FIX 1: Explicitly grant permission to write releases and tags
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -14,8 +18,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Make .love file
+        # Cleaned up: No need to type 'powershell' explicitly on Windows runner
         run: |
-          powershell Compress-Archive -Path program\* -DestinationPath EdoCraft2025.zip
+          Compress-Archive -Path program\* -DestinationPath EdoCraft2025.zip
           Rename-Item EdoCraft2025.zip EdoCraft2025.love
 
       - name: Download LOVE2D for Windows
@@ -24,6 +29,7 @@ jobs:
           Expand-Archive love-win64.zip love
 
       - name: Build Windows standalone
+        # Using cmd /c is correct for the binary copy trick
         run: |
           cmd /c "copy /b love\love-11.5-win64\love.exe+EdoCraft2025.love EdoCraft2025.exe"
           copy love\love-11.5-win64\*.dll .
@@ -32,27 +38,16 @@ jobs:
         run: |
           Compress-Archive -Path EdoCraft2025.exe,*.dll -DestinationPath EdoCraft2025_Windows.zip
 
-      - name: Create dynamic tag
-        run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          TAG=v${{ github.run_number }}
-          git tag $TAG
-          git push origin $TAG
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create GitHub release with files
-        uses: softprops/action-gh-release@v1
+      # FIX 2 & 3: Removed manual git tagging and duplicate upload step.
+      # The release action can handle the tagging automatically and safely.
+      - name: Create Release and Upload
+        uses: softprops/action-gh-release@v2
         with:
+          # This will automatically create the tag 'v1', 'v2', etc. based on run number
           tag_name: v${{ github.run_number }}
+          name: Release v${{ github.run_number }}
           files: EdoCraft2025_Windows.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload the packaged game
-        uses: softprops/action-gh-release@v1
-        with:
-          files: EdoCraft2025_Windows.zip
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
